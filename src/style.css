@@ -1,0 +1,170 @@
+:root {
+  --primary-color: #00ff9d;
+  --bg-color: #0a0a0a;
+  --overlay-bg: rgba(0, 255, 157, 0.1);
+  --font-family: 'Inter', sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: white;
+  font-family: var(--font-family);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#app {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.video-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: 1280px;
+  max-height: 720px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 0 50px rgba(0, 255, 157, 0.2);
+  background: #000;
+}
+
+video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+  /* Mirror effect */
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.tracking-box {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid var(--primary-color);
+  box-shadow: 0 0 15px rgba(0, 255, 157, 0.3);
+  padding: 25px;
+  border-radius: 16px;
+  display: none;
+  /* Hidden until face detected */
+  transition: all 0.1s ease-out;
+  width: 300px;
+  /* Fixed width */
+  backdrop-filter: blur(5px);
+}
+
+/* Remove the corner markers */
+.tracking-box::before,
+.tracking-box::after {
+  display: none;
+}
+
+.label {
+  position: static;
+  transform: none;
+  background: transparent;
+  color: var(--primary-color);
+  padding: 0;
+  border-radius: 0;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  box-shadow: none;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.tracking-box .content {
+  color: #fff;
+  font-size: 16px;
+  line-height: 1.5;
+  /* 24px per line */
+  opacity: 0.9;
+  min-height: 24px;
+  /* At least one line height to keep box shape */
+  white-space: pre-wrap;
+  /* Preserve whitespace/wrapping */
+  word-wrap: break-word;
+}
+
+.btn-primary {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 16px 32px;
+  background: transparent;
+  border: 2px solid var(--primary-color);
+  color: var(--primary-color);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 100;
+  border-radius: 8px;
+  text-transform: uppercase;
+}
+
+.btn-primary:hover {
+  background: var(--primary-color);
+  color: #000;
+  box-shadow: 0 0 30px var(--primary-color);
+}
+
+.btn-primary.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.btn-screenshot {
+  position: absolute;
+  bottom: 80px;
+  /* Moved up from 30px */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+  transition: all 0.2s ease;
+  z-index: 100;
+}
+
+.btn-screenshot:hover {
+  transform: translateX(-50%) scale(1.1);
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+}
+
+.btn-screenshot:active {
+  transform: translateX(-50%) scale(0.95);
+}
+
+.btn-screenshot.hidden {
+  display: none;
+}

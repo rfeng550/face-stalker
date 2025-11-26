@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Face Stalker</title>
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+
+<body>
+  <div id="app">
+    <div class="video-container">
+      <video id="webcam" autoplay playsinline></video>
+      <div id="face-overlay" class="overlay">
+        <div class="tracking-box">
+          <span class="label">SUBJECT IDENTIFIED</span>
+          <div class="content">
+            ID: 8472-A<br>
+            STATUS: TRACKING<br>
+            THREAT: LOW
+          </div>
+        </div>
+      </div>
+    </div>
+    <button id="enable-cam" class="btn-primary">ENABLE VISION</button>
+    <button id="screenshot-btn" class="btn-screenshot hidden" title="Take Screenshot"></button>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>

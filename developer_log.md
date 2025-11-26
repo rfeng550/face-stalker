@@ -1,4 +1,5 @@
 # Face Stalker - Developer Log
+**Date:** 2025-11-25
 
 ## Project Overview
 **Face Stalker** is a web application that uses real-time computer vision to track a user's face via webcam and displays a dynamic, floating information card next to it. The app features a premium "cyberpunk/sci-fi" aesthetic and includes speech-to-text capabilities.

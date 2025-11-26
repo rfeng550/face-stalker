@@ -48,15 +48,15 @@ function enableCam(event) {
     video.addEventListener('loadeddata', predictWebcam);
     enableButton.classList.add('hidden');
     screenshotBtn.classList.remove('hidden');
-    // langToggle.classList.remove('hidden'); // Removed
     startSpeechRecognition();
   });
 }
 
 let recognition;
 let silenceTimer;
+let clearTimer;
 const MAX_LINES = 5;
-const SILENCE_TIMEOUT = 2000; // 2 seconds
+const SILENCE_TIMEOUT = 1500; // 1.5 seconds
 let resultStartIndex = 0;
 
 function startSpeechRecognition() {
@@ -74,6 +74,11 @@ function startSpeechRecognition() {
   contentDiv.textContent = '';
 
   recognition.onresult = (event) => {
+    // Safety check: if the recognition session reset, resultStartIndex might be out of bounds
+    if (event.results.length < resultStartIndex) {
+      resultStartIndex = 0;
+    }
+
     let transcript = '';
 
     // Build transcript from the current start index
@@ -81,33 +86,47 @@ function startSpeechRecognition() {
       transcript += event.results[i][0].transcript;
     }
 
-    contentDiv.textContent = transcript;
+    // Apply heuristics
+    let processedText = transcript.trim();
+    if (processedText.length > 0) {
+      // 1. Capitalize first letter
+      processedText = processedText.charAt(0).toUpperCase() + processedText.slice(1);
 
-    // Check line count
-    const lineHeight = 24;
-    const height = contentDiv.clientHeight;
-    const lines = height / lineHeight;
+      // 2. Check for question words
+      const questionWords = ['who', 'what', 'where', 'when', 'why', 'how', 'is', 'are', 'do', 'does', 'can', 'could', 'would', 'will'];
+      const firstWord = processedText.split(' ')[0].toLowerCase();
+      const isQuestion = questionWords.includes(firstWord);
 
-    if (lines > MAX_LINES) {
-      // Refresh: Move start index to current length
-      // This effectively hides all previous results
-      resultStartIndex = event.results.length;
-      contentDiv.textContent = '';
+      // Update content immediately with capitalization
+      contentDiv.textContent = processedText;
 
-      // If the current result itself is huge (unlikely but possible), we might still overflow.
-      // But typically we overflow by accumulating small results.
+      // Reset silence timer
+      clearTimeout(silenceTimer);
+      clearTimeout(clearTimer);
+
+      silenceTimer = setTimeout(() => {
+        // 3. Add punctuation on silence
+        let finalText = processedText;
+        const lastChar = finalText.slice(-1);
+        if (!['.', '?', '!'].includes(lastChar)) {
+          if (isQuestion) {
+            finalText += '?';
+          } else {
+            finalText += '.';
+          }
+        }
+        contentDiv.textContent = finalText;
+
+        // Wait a bit more before clearing, so user sees the punctuation
+        clearTimer = setTimeout(() => {
+          resultStartIndex = event.results.length;
+          contentDiv.textContent = '';
+        }, 1000); // 1 second extra visibility
+      }, SILENCE_TIMEOUT);
+    } else {
+      // If text was cleared or empty, ensure we don't leave stale text if we were expecting some
+      // contentDiv.textContent = ''; 
     }
-
-    // Reset silence timer
-    clearTimeout(silenceTimer);
-    silenceTimer = setTimeout(() => {
-      // On silence, we also "refresh" by moving the start index
-      // or just clearing the visual text. 
-      // If we just clear visual text, the next result will append to the OLD results if we don't update index.
-      // So we should update the index.
-      resultStartIndex = event.results.length;
-      contentDiv.textContent = '';
-    }, SILENCE_TIMEOUT);
   };
 
   recognition.onerror = (event) => {
@@ -116,12 +135,11 @@ function startSpeechRecognition() {
 
   recognition.onend = () => {
     recognition.start();
+    resultStartIndex = 0;
   };
 
   recognition.start();
 }
-
-// Removed language toggle logic
 
 enableButton.addEventListener('click', enableCam);
 

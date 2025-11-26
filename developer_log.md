@@ -1,5 +1,5 @@
 # Face Stalker - Developer Log
-**Date:** 2025-11-25
+## 2025-11-25
 
 ## Project Overview
 **Face Stalker** is a web application that uses real-time computer vision to track a user's face via webcam and displays a dynamic, floating information card next to it. The app features a premium "cyberpunk/sci-fi" aesthetic and includes speech-to-text capabilities.
@@ -27,3 +27,10 @@
 -   **Speech Recognition**: Real-time, English-only, with auto-refresh and silence detection.
 -   **Visuals**: Premium dark UI with responsive tracking.
 -   **Tools**: Screenshot functionality working correctly.
+
+## 2025-11-26
+
+### 4. Bug Fixes & Optimization
+-   **Speech Sensitivity**: Fixed a race condition in the speech recognition logic where text would sometimes disappear prematurely or fail to appear if the user spoke during a clear event.
+-   **Reliability**: Added a session reset mechanism to ensure speech recognition continues to function correctly after automatic restarts or network interruptions.
+-   **Tuning**: Adjusted silence timeout to 1.5 seconds for better user experience.
